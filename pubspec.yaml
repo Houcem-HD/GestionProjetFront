@@ -1,0 +1,33 @@
+name: admin # This MUST match the 'admin' in your package:admin imports
+description: A Flutter admin panel project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0' # Adjust this based on your Flutter SDK version
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0 # For custom fonts
+  provider: ^6.0.5 # For state management
+  shared_preferences: ^2.2.2 # For local data storage (e.g., tokens)
+  http: ^1.1.0 # For making HTTP requests to your Laravel API
+  flutter_svg: ^2.0.9 # For rendering SVG assets
+  fl_chart: ^0.66.0 # For charts in the dashboard
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section like this:
+  assets:
+    - assets/images/
+    - assets/icons/

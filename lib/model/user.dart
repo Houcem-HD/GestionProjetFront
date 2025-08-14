@@ -1,15 +1,17 @@
+// lib/model/user.dart
 class User {
   final int? id;
   final int rolesId;
   final String nom;
   final String prenom;
   final String email;
-  final String password;
-  final String phone;
-  final String adresse;
+  final String? password;
+  final String? phone;
+  final String? adresse;
   final String status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final DateTime? deletedAt;
 
   User({
     this.id,
@@ -17,49 +19,54 @@ class User {
     required this.nom,
     required this.prenom,
     required this.email,
-    required this.password,
-    required this.phone,
-    required this.adresse,
+    this.password,
+    this.phone,
+    this.adresse,
     required this.status,
     this.createdAt,
     this.updatedAt,
+    this.deletedAt,
   });
 
-  /// Create a User object from JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      rolesId: json['roles_id'],
-      nom: json['nom'],
-      prenom: json['prenom'],
-      email: json['email'],
+      rolesId: json['roles_id'] ?? 2,
+      nom: json['nom'] ?? '',
+      prenom: json['prenom'] ?? '',
+      email: json['email'] ?? '',
       password: json['password'],
       phone: json['phone'],
       adresse: json['adresse'],
-      status: json['status'],
+      status: json['status'] ?? 'active',
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'])
           : null,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
     );
   }
 
-  /// Convert a User object to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'roles_id': rolesId,
-      'nom': nom,
-      'prenom': prenom,
-      'email': email,
-      'password': password,
-      'phone': phone,
-      'adresse': adresse,
-      'status': status,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-    };
+  final data = {
+    'nom': nom,
+    'prenom': prenom,
+    'email': email,
+    'phone': phone,
+    'adresse': adresse,
+    'status': status,
+    'roles_id': rolesId,
+  };
+
+  if (password != null && password!.isNotEmpty) {
+    data['password'] = password;
   }
+
+  return data;
+}
+
 }

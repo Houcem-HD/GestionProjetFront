@@ -1,9 +1,10 @@
+import 'package:admin/screens/projets/list_projects.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/screens/dashboard_screen.dart'; // Import DashboardScreen
 
 class MenuAppController extends ChangeNotifier {
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-Widget _currentPage = DashboardScreen(); // Default to DashboardScreen
+Widget _currentPage = ProjectListScreen(); // Default to DashboardScreen
 
 GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
 Widget get currentPage => _currentPage;

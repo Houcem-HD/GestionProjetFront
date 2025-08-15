@@ -27,17 +27,10 @@ class SideMenu extends StatelessWidget {
             child: Image.asset("assets/images/logo.png"),
           ),
           DrawerListTile(
-            title: "Dashboard",
-            iconData: Icons.dashboard_outlined,
-            press: () {
-              menuController.setCurrentPage(DashboardScreen());
-            },
-          ),
-          DrawerListTile(
             title: "Liste des Projects",
             iconData: Icons.work_outline,
             press: () {
-              menuController.setCurrentPage(ProjectScreen());
+              menuController.setCurrentPage(ProjectListScreen());
             },
           ),
           DrawerListTile(
@@ -107,12 +100,12 @@ class DrawerListTile extends StatelessWidget {
       horizontalTitleGap: 0.0,
       leading: Icon(
         iconData,
-        color: Colors.white54,
+        color: Theme.of(context).iconTheme.color,
         size: 20,
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white54),
+        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
       ),
     );
   }

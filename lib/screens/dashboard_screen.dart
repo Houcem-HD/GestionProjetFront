@@ -20,7 +20,7 @@ class DashboardScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(defaultPadding),
               decoration: BoxDecoration(
-                color: secondaryColor,
+                color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(

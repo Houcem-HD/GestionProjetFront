@@ -6,8 +6,8 @@ import 'package:admin/model/user.dart';
 import 'dart:developer' as developer;
 
 class UserService {
-  static const String _baseUrl = 'http://127.0.0.1:8000/api'; // Laravel API base URL
-
+  static const String _baseUrl = 'http://127.0.0.1:8000/api';
+  
   Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -26,7 +26,7 @@ class UserService {
   Future<List<User>> fetchUsers() async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/user'), // Changed from /user to /users
+        Uri.parse('$_baseUrl/user'),
         headers: await _getHeaders(),
       );
       developer.log('Response status: ${response.statusCode}');
@@ -129,6 +129,45 @@ class UserService {
     } catch (e) {
       developer.log('Error deleting user: $e');
       throw Exception('Failed to delete user: ${e.toString()}');
+    }
+  }
+  Future<User> activateUser(int id) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/users/$id/activate'),
+        headers: await _getHeaders(),
+      );
+      developer.log('Activate response status: ${response.statusCode}');
+      developer.log('Activate response body: ${response.body}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data['user']);
+      } else {
+        throw Exception('Failed to activate user: ${response.statusCode} ${response.body}');
+      }
+    } catch (e) {
+      developer.log('Error activating user: $e');
+      throw Exception('Failed to activate user: ${e.toString()}');
+    }
+  }
+
+  Future<User> suspendUser(int id) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/users/$id/suspend'),
+        headers: await _getHeaders(),
+      );
+      developer.log('Suspend response status: ${response.statusCode}');
+      developer.log('Suspend response body: ${response.body}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data['user']);
+      } else {
+        throw Exception('Failed to suspend user: ${response.statusCode} ${response.body}');
+      }
+    } catch (e) {
+      developer.log('Error suspending user: $e');
+      throw Exception('Failed to suspend user: ${e.toString()}');
     }
   }
 }

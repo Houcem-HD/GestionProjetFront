@@ -10,7 +10,10 @@ import 'package:http/http.dart' as http;
 import '../../../constants.dart';
 
 class Header extends StatefulWidget {
-  const Header({Key? key}) : super(key: key);
+  final Function(String)? onSearchChanged;
+  final VoidCallback? onSearchClear;
+  
+  const Header({Key? key, this.onSearchChanged, this.onSearchClear}) : super(key: key);
 
   @override
   State<Header> createState() => _HeaderState();
@@ -38,9 +41,15 @@ class _HeaderState extends State<Header> {
 
         // Search icon + expandable bar
         if (_showSearch)
-          Expanded(child: SearchField(onClose: () {
-            setState(() => _showSearch = false);
-          }))
+          Expanded(child: SearchField(
+            onClose: () {
+              setState(() => _showSearch = false);
+              if (widget.onSearchClear != null) {
+                widget.onSearchClear!();
+              }
+            },
+            onSearchChanged: widget.onSearchChanged,
+          ))
         else
           IconButton(
             icon: const Icon(Icons.search),
@@ -129,13 +138,13 @@ class _ProfileCardState extends State<ProfileCard> {
         vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.2)),
       ),
       child: Row(
         children: [
-          Text(_userName),
+          Text(_userName, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
           const SizedBox(width: 8),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.redAccent),
@@ -147,9 +156,18 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 }
 
-class SearchField extends StatelessWidget {
+class SearchField extends StatefulWidget {
   final VoidCallback onClose;
-  const SearchField({Key? key, required this.onClose}) : super(key: key);
+  final Function(String)? onSearchChanged;
+  
+  const SearchField({Key? key, required this.onClose, this.onSearchChanged}) : super(key: key);
+
+  @override
+  State<SearchField> createState() => _SearchFieldState();
+}
+
+class _SearchFieldState extends State<SearchField> {
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -157,23 +175,47 @@ class SearchField extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            controller: _controller,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: "Search",
-              fillColor: secondaryColor,
+              hintText: "Search users...",
+              fillColor: Theme.of(context).cardColor,
               filled: true,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
+              suffixIcon: _controller.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _controller.clear();
+                        if (widget.onSearchChanged != null) {
+                          widget.onSearchChanged!("");
+                        }
+                      },
+                    )
+                  : null,
             ),
+            onChanged: (value) {
+              setState(() {}); // Update UI for clear button
+              if (widget.onSearchChanged != null) {
+                widget.onSearchChanged!(value);
+              }
+            },
           ),
         ),
         IconButton(
           icon: const Icon(Icons.close),
-          onPressed: onClose,
+          onPressed: widget.onClose,
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
